@@ -1,17 +1,17 @@
 import { createTheme } from '@mui/material/styles';
 
 const pmGreen = "#28F7B8";
-const pmGrey = "#607d8b";
+const pmGray = "#607d8b";
 const pmCian = "#2FA5E0";
 
 const theme = createTheme({
   palette: {
     common: {
-      grey: pmGrey,
+      gray: pmGray,
       green: pmGreen
     },
     primary: {
-      main: pmGrey
+      main: pmGray
     },
     secondary: {
       main: pmGreen
@@ -35,24 +35,24 @@ const theme = createTheme({
       fontFamily: "Raleway",
       fontWeight: 700,
       fontSize: "2.5rem",
-      color: pmGrey,
+      color: pmGray,
       lineHeight: 1.5
     },
     h3: {
       fontFamily: "Pacifico",
       fontSize: "2.5rem",
-      color: pmGrey
+      color: pmGray
     },
     h4: {
       fontFamily: "Raleway",
       fontSize: "1.75rem",
-      color: pmGrey,
+      color: pmGray,
       fontWeight: 700
     },
     h6: {
       fontWeight: 500,
       fontFamily: "Raleway",
-      color: pmGrey
+      color: pmGray
     },
     subtitle1: {
       fontSize: "1.25rem",
@@ -75,19 +75,33 @@ const theme = createTheme({
       color: pmCian
     },
     learnButton: {
-      borderColor: pmGrey,
+      borderColor: pmGray,
       borderWidth: 2,
       textTransform: "none",
-      color: pmGrey,
+      color: pmGray,
       borderRadius: 50,
       fontFamily: "Roboto",
       fontWeight: "bold"
     }
   },
+  components:{
+    MuiFormControlLabel:{
+      styleOverrides:{
+        label:{
+          color: pmGray,
+          fontWeight: 700
+        },
+        root:{
+          marginLeft: 0,
+          marginRight: '5em'
+        }
+      }
+    }
+  },
   overrides: {
     MuiInputLabel: {
       root: {
-        color: pmGrey,
+        color: pmGray,
         fontSize: "1rem"
       }
     },
@@ -98,10 +112,10 @@ const theme = createTheme({
       },
       underline: {
         "&:before": {
-          borderBottom: `2px solid ${pmGrey}`
+          borderBottom: `2px solid ${pmGray}`
         },
         "&:hover:not($disabled):not($focused):not($error):before": {
-          borderBottom: `2px solid ${pmGrey}`
+          borderBottom: `2px solid ${pmGray}`
         }
       }
     }

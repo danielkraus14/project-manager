@@ -42,7 +42,7 @@ export default function Header(props) {
               margin: 0;
             }
           `}</style>
-          <img src='/assets/header-logo.png' />
+          <img src='/assets/header-logo.png' style={{marginLeft: '1em'}}/>
         </Toolbar>
       </AppBar>
       <div className={classes.toolbarMargin} />

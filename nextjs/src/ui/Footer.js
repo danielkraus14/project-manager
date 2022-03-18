@@ -1,35 +1,33 @@
 import React from "react";
-import { makeStyles } from "@mui/styles";
+import { useTheme, styled } from "@mui/material/styles";
+import { Grid } from "@mui/material";
 
-const useStyles = makeStyles(theme => ({
-  footer: {
-    backgroundColor: theme.palette.common.blue,
-    width: "100%",
-    zIndex: 1302,
-    position: "relative"
+const CustomImg = styled('img')(({theme})=>({
+  width: "20em",
+  verticalAlign: "bottom",
+  [theme.breakpoints.down("lg")]: {
+    width: "18em"
   },
-  adornment: {
-    width: "25em",
-    verticalAlign: "bottom",
-    [theme.breakpoints.down("md")]: {
-      width: "21em"
-    },
-    [theme.breakpoints.down("xs")]: {
-      width: "15em"
-    }
+  [theme.breakpoints.down("md")]: {
+    width: "12em"
   }
-}));
+}))
+
+
 
 export default function Footer(props) {
-  const classes = useStyles();
+  const theme = useTheme();
 
   return (
-    <footer className={classes.footer}>
-      <img
-        alt="black decorative slash"
-        src="/assets/footerAdornment.png"
-        className={classes.adornment}
-      />
+    <footer>
+      <Grid container style={{backgroundColor: theme.palette.common.gray}}>
+        <Grid item style={{marginLeft:'2em'}} >
+          <CustomImg
+            alt="bricks building"
+            src="/assets/footerAdornment.png"
+          />
+        </Grid>
+      </Grid>
     </footer>
   );
 }
