@@ -1,20 +1,20 @@
 import { createTheme } from '@mui/material/styles';
 
-const pmGreen = "#28F7B8";
+const pmBlue = "#02354F";
 const pmGray = "#607d8b";
-const pmCian = "#2FA5E0";
+const pmCian = "#87B0C4";
 
 const theme = createTheme({
   palette: {
     common: {
       gray: pmGray,
-      green: pmGreen
+      blue: pmBlue
     },
     primary: {
       main: pmGray
     },
     secondary: {
-      main: pmGreen
+      main: pmBlue
     }
   },
   typography: {
@@ -66,13 +66,13 @@ const theme = createTheme({
     },
     body1: {
       fontSize: "1.25rem",
-      color: pmCian,
+      color: pmBlue,
       fontWeight: 300
     },
     caption: {
       fontSize: "1rem",
       fontWeight: 300,
-      color: pmCian
+      color: pmBlue
     },
     learnButton: {
       borderColor: pmGray,
@@ -96,6 +96,22 @@ const theme = createTheme({
           marginRight: '5em'
         }
       }
+    },
+    MuiTableCell:{
+      styleOverrides:{
+        head:{
+          fontSize: '1rem',
+          color: pmGray,
+          fontWeight: 700,
+          borderColor: pmGray,
+          borderWidth: 2
+          },
+          body:{
+            borderColor: pmGray,
+            color:pmBlue,
+            borderWidth: 1.5
+          }
+      }
     }
   },
   overrides: {
@@ -117,6 +133,11 @@ const theme = createTheme({
         "&:hover:not($disabled):not($focused):not($error):before": {
           borderBottom: `2px solid ${pmGray}`
         }
+      }
+    },
+    MuiPickersToolbar:{
+      toolbar:{
+        backgroundColor: pmGray
       }
     }
   }
