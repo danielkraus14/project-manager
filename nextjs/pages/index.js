@@ -18,6 +18,7 @@ import {
   Dialog,
   DialogContent,
   RadioGroup,
+  useRadioGroup,
   Radio,
   FormControl,
   FormLabel
@@ -26,6 +27,7 @@ import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DatePicker from '@mui/lab/DatePicker';
 import { styled, useTheme } from "@mui/material/styles";
+import {makeStyles} from '@mui/styles'
 import AddIcon from "@mui/icons-material/Add";
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import FilterListIcon from "@mui/icons-material/FilterList";
@@ -42,9 +44,48 @@ function createData(
 ) {
   return { name, date, service, features, complexity, platforms, users, total };
 };
+const useStyles = makeStyles((theme)=>({}));
+
+const StyledFormControlLabel = styled((props) => <FormControlLabel {...props} />)(
+  ({ theme, checked }) => ({
+    '.MuiFormControlLabel-label': {
+      fontWeight: checked ? 700 : 300,
+      color: checked ? theme.palette.secondary.main : theme.palette.primary.main,
+    },
+    '.MuiFormControlLabel-root':{
+      marginRight: 0
+    }
+    
+
+  }),
+);
+
+function MyFormControlLabel(props) {
+  const radioGroup = useRadioGroup();
+
+  let checked = false;
+
+  if (radioGroup) {
+    checked = radioGroup.value === props.value;
+  }
+
+  return <StyledFormControlLabel checked={checked} {...props} />;
+};
+
+const StyledFormLabel = styled(FormLabel)(({theme})=>({
+  '&.Mui-focused':{
+    color: theme.palette.secondary.main
+  }
+}));
+const StyledRadio = styled(Radio)(({theme})=>({
+  '&.Mui-checked':{
+    color: theme.palette.secondary.main
+  }
+}));
 
 export default function Index() {
   const theme = useTheme();
+  const classes = useStyles();
   const matchesMD = useMediaQuery(theme.breakpoints.down("sm"));
   const [websiteChek, setWebsiteChek] = useState(false);
   const [iOSChek, setiOSChek] = useState(false);
@@ -55,7 +96,9 @@ export default function Index() {
   const [date, setDate] = useState(null);
   const [total, setTotal] = useState('');
   const [totalIsFocused, setTotalIsFocused] = useState(false);
-  const [service, setService] = useState(null)
+  const [service, setService] = useState(null);
+  const [complexity, setComplexity] = useState(null);
+  const [users, setUsers] = useState(null);
 
   const [rows, setRows] = useState([
     createData(
@@ -126,6 +169,7 @@ export default function Index() {
               }
               label="Websites"
               labelPlacement="start"
+              sx={{marginRight: '5em'}}
             />
             <FormControlLabel
               control={
@@ -137,6 +181,7 @@ export default function Index() {
               }
               label="iOS Apps"
               labelPlacement="start"
+              sx={{marginRight: '5em'}}
             />
             <FormControlLabel
               control={
@@ -148,6 +193,7 @@ export default function Index() {
               }
               label="Android Apps"
               labelPlacement="start"
+              sx={{marginRight: '5em'}}
             />
             <FormControlLabel
               control={
@@ -159,6 +205,7 @@ export default function Index() {
               }
               label="Custom Software"
               labelPlacement="start"
+              sx={{marginRight: '5em'}}
             />
           </FormGroup>
         </Grid>
@@ -215,37 +262,65 @@ export default function Index() {
               <Grid item>
                 <Grid item container direction='column' sm>
                   <Grid item>
-                    <TextField variant='standard' label='Name' id='name' value={name} onChange={(event)=> setName(event.target.value)} />
+                    <TextField variant='standard' fullWidth label='Name' id='name' value={name} onChange={(event)=> setName(event.target.value)} />
                   </Grid>
                 </Grid>
-                <Grid item container direction='column' sx={{marginTop: '2em'}}>
+                <Grid item container direction='column' sx={{marginTop: '5em'}}>
                   <Grid item>
                     <FormControl>
-                      <FormLabel id='services'><h2>Services</h2></FormLabel>
-                      <RadioGroup aria-labelledby="service" name='service'>
-                        <FormControlLabel value='website' control={<Radio onChecked />} label='Website'/>
-                        <FormControlLabel value='mobile-app' control={<Radio />} label='Mobile App'/>
-                        <FormControlLabel value='custom-software' control={<Radio />} label='Custom Software'/>
+                      <StyledFormLabel id='services'><h2>Services</h2></StyledFormLabel>
+                      <RadioGroup aria-labelledby="service" value={service} name='service' onChange={(event)=> setService(event.target.value)}>
+                        <MyFormControlLabel value='website' control={<StyledRadio />} label='Website'/>
+                        <MyFormControlLabel value='mobile-app' control={<StyledRadio />} label='Mobile App' />
+                        <MyFormControlLabel value='custom-software' control={<StyledRadio />} label='Custom Software'/>
                       </RadioGroup>
                     </FormControl>
                   </Grid>
                 </Grid>
               </Grid>
               <Grid item>
-                <Grid item container direction='column' sm>
+                <Grid item container direction='column' sm alignItems='center'>
                   <Grid item>
                     <DatePicker label='Select Date' value={date} onChange={newDate => setDate(newDate)} renderInput={(params) => <TextField variant='standard' {...params}/>}/>
                   </Grid>
+                  <Grid item>
+                  <Grid item container direction='column' sx={{marginTop: '5em'}}>
+                    <Grid item>
+                      <FormControl>
+                        <StyledFormLabel id='complexity'><h2>Complexity</h2></StyledFormLabel>
+                        <RadioGroup aria-labelledby="complexity" value={complexity} name='complexity' onChange={(event)=> setComplexity(event.target.value)}>
+                          <MyFormControlLabel value='low' control={<StyledRadio />} label='Low'/>
+                          <MyFormControlLabel value='medium' control={<StyledRadio />} label='Medium' />
+                          <MyFormControlLabel value='high' control={<StyledRadio />} label='High'/>
+                        </RadioGroup>
+                      </FormControl>
+                    </Grid>
+                  </Grid>
+                </Grid>
                 </Grid>
               </Grid>
               <Grid item>
-                <Grid item container direction='column' sm>
+                <Grid item container direction='column' sm alignItems='flex-end'>
                   <Grid item>
-                    <TextField variant='standard' label='Total' id='total' value={total} onFocus={()=> setTotalIsFocused(true)} onBlur={()=> total === '' ? setTotalIsFocused(false) : null} onChange={(event)=> setTotal(event.target.value)} InputProps={{startAdornment: totalIsFocused ? (
+                    <TextField variant='standard' fullWidth label='Total' id='total' value={total} onFocus={()=> setTotalIsFocused(true)} onBlur={()=> total === '' ? setTotalIsFocused(false) : null} onChange={(event)=> setTotal(event.target.value)} InputProps={{startAdornment: totalIsFocused ? (
                       <InputAdornment position='start'>
                         <AttachMoneyIcon />
                       </InputAdornment>
                     ) : null}} />
+                  </Grid>
+                  <Grid item>
+                    <Grid item container direction='column' sx={{marginTop: '5em'}} alignItems='flex-end'>
+                    <Grid item>
+                      <FormControl>
+                        <StyledFormLabel id='users'><h2>Users</h2></StyledFormLabel>
+                        <RadioGroup aria-labelledby="users" value={users} name='users' onChange={(event)=> setUsers(event.target.value)}>
+                          <MyFormControlLabel value='0-10' control={<StyledRadio />} label='0-10'/>
+                          <MyFormControlLabel value='10-100' control={<StyledRadio />} label='10-100' />
+                          <MyFormControlLabel value='100+' control={<StyledRadio />} label='100+'/>
+                        </RadioGroup>
+                      </FormControl>
+                    </Grid>
+                  </Grid>
                   </Grid>
                 </Grid>
               </Grid>

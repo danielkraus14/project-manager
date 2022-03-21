@@ -89,12 +89,13 @@ const theme = createTheme({
       styleOverrides:{
         label:{
           color: pmGray,
-          fontWeight: 700
+          fontWeight: 700,
         },
         root:{
           marginLeft: 0,
-          marginRight: '5em'
-        }
+          marginRight:0
+        },
+        
       }
     },
     MuiTableCell:{
