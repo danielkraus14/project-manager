@@ -8,7 +8,8 @@ const theme = createTheme({
   palette: {
     common: {
       gray: pmGray,
-      blue: pmBlue
+      blue: pmBlue,
+      cian: pmCian
     },
     primary: {
       main: pmGray
@@ -94,8 +95,14 @@ const theme = createTheme({
         root:{
           marginLeft: 0,
           marginRight:0
-        },
-        
+        }, 
+      }
+    },
+    MuiSelect:{
+      styleOverrides:{
+        icon:{
+          fill: pmCian
+        }
       }
     },
     MuiTableCell:{

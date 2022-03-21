@@ -4,6 +4,7 @@ import {
   Typography,
   TextField,
   InputAdornment,
+  InputLabel,
   Switch,
   FormGroup,
   FormControlLabel,
@@ -21,7 +22,10 @@ import {
   useRadioGroup,
   Radio,
   FormControl,
-  FormLabel
+  FormLabel,
+  Select,
+  MenuItem,
+  Button,
 } from "@mui/material";
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
@@ -31,6 +35,7 @@ import {makeStyles} from '@mui/styles'
 import AddIcon from "@mui/icons-material/Add";
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import FilterListIcon from "@mui/icons-material/FilterList";
+import { format } from "date-fns";
 
 function createData(
   name,
@@ -83,10 +88,36 @@ const StyledRadio = styled(Radio)(({theme})=>({
   }
 }));
 
+const StyledButton = styled(Button)(({theme}) => ({
+  backgroundColor: theme.palette.secondary.main,
+  color: '#fff',
+  borderRadius: 50,
+  textTransform: 'none',
+  '&:hover':{
+    backgroundColor: theme.palette.secondary.light
+  }
+}));
+
+const StyledButtonCancel = styled(Button)(({theme}) => ({
+  backgroundColor: theme.palette.common.cian,
+  color: theme.palette.secondary.main,
+  borderRadius: 50,
+  textTransform: 'none',
+  '&:hover':{
+    color: '#fff'
+  },
+  marginRight: '2em'
+}));
+
 export default function Index() {
   const theme = useTheme();
   const classes = useStyles();
   const matchesMD = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const platformsOptions = ['Web', 'iOS', 'Android'];
+  const featuresOptions = ['Photo/Video', 'GPS', 'File Transfer', 'Users/Authentication', 'Biometrics', 'Push Notifications'];
+  const websiteFeaturesOptions = ['Basic', 'Interactive', 'E-Commerce']
+
   const [websiteChek, setWebsiteChek] = useState(false);
   const [iOSChek, setiOSChek] = useState(false);
   const [androidChek, setandroidChek] = useState(false);
@@ -99,6 +130,8 @@ export default function Index() {
   const [service, setService] = useState(null);
   const [complexity, setComplexity] = useState(null);
   const [users, setUsers] = useState(null);
+  const [platforms, setPlatforms] = useState([]);
+  const [features, setFeatures] = useState([]);
 
   const [rows, setRows] = useState([
     createData(
@@ -132,6 +165,31 @@ export default function Index() {
       "$1250"
     ),
   ]);
+
+  const handleSubmitNewProject = ()=>{
+    setRows([...rows,createData(
+      name,
+      format(date, 'MM/dd/yy'),
+      service,
+      service === 'Website' ? features : features.join(', '),
+      service === 'Website' ? 'N/A' : complexity,
+      service === 'Website' ? 'N/A' : platforms.join(', '),
+      service === 'Website' ? 'N/A' : users,
+      `$ ${total}`
+    )]);
+
+    setDialogOpen(false);
+    console.log(rows);
+
+    setName('');
+    setDate(null);
+    setService(null);
+    setFeatures([]);
+    setPlatforms([]);
+    setComplexity(null);
+    setUsers(null);
+    setTotal('');
+  }
 
 
   return (
@@ -269,13 +327,32 @@ export default function Index() {
                   <Grid item>
                     <FormControl>
                       <StyledFormLabel id='services'><h2>Services</h2></StyledFormLabel>
-                      <RadioGroup aria-labelledby="service" value={service} name='service' onChange={(event)=> setService(event.target.value)}>
-                        <MyFormControlLabel value='website' control={<StyledRadio />} label='Website'/>
-                        <MyFormControlLabel value='mobile-app' control={<StyledRadio />} label='Mobile App' />
-                        <MyFormControlLabel value='custom-software' control={<StyledRadio />} label='Custom Software'/>
+                      <RadioGroup aria-labelledby="service" value={service} name='service' onChange={(event)=> {setService(event.target.value); setFeatures([])}}>
+                        <MyFormControlLabel value='Website' control={<StyledRadio />} label='Website'/>
+                        <MyFormControlLabel value='Mobile App' control={<StyledRadio />} label='Mobile App' />
+                        <MyFormControlLabel value='Custom Software' control={<StyledRadio />} label='Custom Software'/>
                       </RadioGroup>
                     </FormControl>
                   </Grid>
+                </Grid>
+                <Grid item container direction='column' sx={{marginTop: '5em'}}>
+                  <FormControl variant='standard' fullWidth>
+                    <InputLabel id='platforms-label'>Platforms</InputLabel>
+                    <Select
+                      labelId="platforms-label"
+                      sx={{width:'12em'}}
+                      id="platforms-select"
+                      value={platforms}
+                      label="Platform"
+                      multiple
+                      onChange={(event)=> setPlatforms(event.target.value)}
+                      disabled={service === 'Website'}
+                    >
+                      {platformsOptions.map(option => 
+                          <MenuItem value={option} key={option}>{option}</MenuItem>
+                        )}
+                    </Select>
+                  </FormControl>
                 </Grid>
               </Grid>
               <Grid item>
@@ -289,9 +366,9 @@ export default function Index() {
                       <FormControl>
                         <StyledFormLabel id='complexity'><h2>Complexity</h2></StyledFormLabel>
                         <RadioGroup aria-labelledby="complexity" value={complexity} name='complexity' onChange={(event)=> setComplexity(event.target.value)}>
-                          <MyFormControlLabel value='low' control={<StyledRadio />} label='Low'/>
-                          <MyFormControlLabel value='medium' control={<StyledRadio />} label='Medium' />
-                          <MyFormControlLabel value='high' control={<StyledRadio />} label='High'/>
+                          <MyFormControlLabel value='Low' control={<StyledRadio />} label='Low' disabled={service === 'Website'}/>
+                          <MyFormControlLabel value='Medium' control={<StyledRadio />} label='Medium' disabled={service === 'Website'} />
+                          <MyFormControlLabel value='High' control={<StyledRadio />} label='High' disabled={service === 'Website'}/>
                         </RadioGroup>
                       </FormControl>
                     </Grid>
@@ -310,22 +387,66 @@ export default function Index() {
                   </Grid>
                   <Grid item>
                     <Grid item container direction='column' sx={{marginTop: '5em'}} alignItems='flex-end'>
-                    <Grid item>
-                      <FormControl>
-                        <StyledFormLabel id='users'><h2>Users</h2></StyledFormLabel>
-                        <RadioGroup aria-labelledby="users" value={users} name='users' onChange={(event)=> setUsers(event.target.value)}>
-                          <MyFormControlLabel value='0-10' control={<StyledRadio />} label='0-10'/>
-                          <MyFormControlLabel value='10-100' control={<StyledRadio />} label='10-100' />
-                          <MyFormControlLabel value='100+' control={<StyledRadio />} label='100+'/>
-                        </RadioGroup>
-                      </FormControl>
+                      <Grid item>
+                        <FormControl>
+                          <StyledFormLabel id='users'><h2>Users</h2></StyledFormLabel>
+                          <RadioGroup aria-labelledby="users" value={users} name='users' onChange={(event)=> setUsers(event.target.value)}>
+                            <MyFormControlLabel value='0-10' control={<StyledRadio />} label='0-10' disabled={service === 'Website'}/>
+                            <MyFormControlLabel value='10-100' control={<StyledRadio />} label='10-100' disabled={service === 'Website'} />
+                            <MyFormControlLabel value='100+' control={<StyledRadio />} label='100+' disabled={service === 'Website'}/>
+                          </RadioGroup>
+                        </FormControl>
+                      </Grid>
                     </Grid>
                   </Grid>
-                  </Grid>
+                  <Grid item container direction='column' sx={{marginTop: '5em'}}>
+                  <FormControl variant='standard' fullWidth>
+                    <InputLabel id='features-label'>Features</InputLabel>
+                    <Select
+                      labelId="features-label"
+                      id="features-select"
+                      sx={{width:'12em'}}
+                      value={features}
+                      label="Features"
+                      multiple={service !== 'Website'}
+                      onChange={(event)=> setFeatures(event.target.value)}
+                    >
+                      { service === 'Website'
+                        ?
+                        websiteFeaturesOptions.map(option => 
+                          <MenuItem value={option} key={option}>{option}</MenuItem>
+                        )
+                        :
+                        featuresOptions.map(option => 
+                            <MenuItem value={option} key={option}>{option}</MenuItem>
+                          )
+                      }
+                    </Select>
+                  </FormControl>
+                </Grid>
                 </Grid>
               </Grid>
             </Grid>
-            
+            <Grid item container justifyContent='center' sx={{marginTop: '3em'}}>
+              <Grid item>
+                <StyledButtonCancel variant='contained' onClick={()=> setDialogOpen(false)}>
+                  Cancel X
+                </StyledButtonCancel>
+              </Grid>
+              <Grid item>
+                <StyledButton variant='contained' onClick={handleSubmitNewProject}
+                  disabled={
+                    service === 'Website'
+                    ? 
+                    name.length === 0 || total.length === 0 || features.length === 0
+                    :
+                    name.length === 0 || total.length === 0 || features.length === 0 || users === null || complexity.length === 0 || platforms.length === 0 || service.length === 0
+                  }
+                >
+                  Add Project +
+                </StyledButton>
+              </Grid>
+            </Grid>
           </DialogContent>
         </Dialog>
       </Grid>
