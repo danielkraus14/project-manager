@@ -27,13 +27,13 @@ import {
   MenuItem,
   Button,
 } from "@mui/material";
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
-import DatePicker from '@mui/lab/DatePicker';
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import DatePicker from "@mui/lab/DatePicker";
 import { styled, useTheme } from "@mui/material/styles";
-import {makeStyles} from '@mui/styles'
+import { makeStyles } from "@mui/styles";
 import AddIcon from "@mui/icons-material/Add";
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { format } from "date-fns";
 
@@ -45,25 +45,24 @@ function createData(
   complexity,
   platforms,
   users,
-  total
+  total,
+  search
 ) {
-  return { name, date, service, features, complexity, platforms, users, total };
-};
-const useStyles = makeStyles((theme)=>({}));
+  return { name, date, service, features, complexity, platforms, users, total, search };
+}
+const useStyles = makeStyles((theme) => ({}));
 
-const StyledFormControlLabel = styled((props) => <FormControlLabel {...props} />)(
-  ({ theme, checked }) => ({
-    '.MuiFormControlLabel-label': {
-      fontWeight: checked ? 700 : 300,
-      color: checked ? theme.palette.secondary.main : theme.palette.primary.main,
-    },
-    '.MuiFormControlLabel-root':{
-      marginRight: 0
-    }
-    
-
-  }),
-);
+const StyledFormControlLabel = styled((props) => (
+  <FormControlLabel {...props} />
+))(({ theme, checked }) => ({
+  ".MuiFormControlLabel-label": {
+    fontWeight: checked ? 700 : 300,
+    color: checked ? theme.palette.secondary.main : theme.palette.primary.main,
+  },
+  ".MuiFormControlLabel-root": {
+    marginRight: 0,
+  },
+}));
 
 function MyFormControlLabel(props) {
   const radioGroup = useRadioGroup();
@@ -75,38 +74,38 @@ function MyFormControlLabel(props) {
   }
 
   return <StyledFormControlLabel checked={checked} {...props} />;
-};
+}
 
-const StyledFormLabel = styled(FormLabel)(({theme})=>({
-  '&.Mui-focused':{
-    color: theme.palette.secondary.main
-  }
+const StyledFormLabel = styled(FormLabel)(({ theme }) => ({
+  "&.Mui-focused": {
+    color: theme.palette.secondary.main,
+  },
 }));
-const StyledRadio = styled(Radio)(({theme})=>({
-  '&.Mui-checked':{
-    color: theme.palette.secondary.main
-  }
+const StyledRadio = styled(Radio)(({ theme }) => ({
+  "&.Mui-checked": {
+    color: theme.palette.secondary.main,
+  },
 }));
 
-const StyledButton = styled(Button)(({theme}) => ({
+const StyledButton = styled(Button)(({ theme }) => ({
   backgroundColor: theme.palette.secondary.main,
-  color: '#fff',
+  color: "#fff",
   borderRadius: 50,
-  textTransform: 'none',
-  '&:hover':{
-    backgroundColor: theme.palette.secondary.light
-  }
+  textTransform: "none",
+  "&:hover": {
+    backgroundColor: theme.palette.secondary.light,
+  },
 }));
 
-const StyledButtonCancel = styled(Button)(({theme}) => ({
+const StyledButtonCancel = styled(Button)(({ theme }) => ({
   backgroundColor: theme.palette.common.cian,
   color: theme.palette.secondary.main,
   borderRadius: 50,
-  textTransform: 'none',
-  '&:hover':{
-    color: '#fff'
+  textTransform: "none",
+  "&:hover": {
+    color: "#fff",
   },
-  marginRight: '2em'
+  marginRight: "2em",
 }));
 
 export default function Index() {
@@ -114,35 +113,44 @@ export default function Index() {
   const classes = useStyles();
   const matchesMD = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const platformsOptions = ['Web', 'iOS', 'Android'];
-  const featuresOptions = ['Photo/Video', 'GPS', 'File Transfer', 'Users/Authentication', 'Biometrics', 'Push Notifications'];
-  const websiteFeaturesOptions = ['Basic', 'Interactive', 'E-Commerce']
+  const platformsOptions = ["Web", "iOS", "Android"];
+  const featuresOptions = [
+    "Photo/Video",
+    "GPS",
+    "File Transfer",
+    "Users/Authentication",
+    "Biometrics",
+    "Push Notifications",
+  ];
+  const websiteFeaturesOptions = ["Basic", "Interactive", "E-Commerce"];
 
   const [websiteChek, setWebsiteChek] = useState(false);
   const [iOSChek, setiOSChek] = useState(false);
   const [androidChek, setandroidChek] = useState(false);
   const [softwareChek, setSoftwareChek] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [name, setName] = useState('');
+  const [name, setName] = useState("");
   const [date, setDate] = useState(null);
-  const [total, setTotal] = useState('');
+  const [total, setTotal] = useState("");
   const [totalIsFocused, setTotalIsFocused] = useState(false);
   const [service, setService] = useState(null);
   const [complexity, setComplexity] = useState(null);
   const [users, setUsers] = useState(null);
   const [platforms, setPlatforms] = useState([]);
   const [features, setFeatures] = useState([]);
+  const [search, setSearch] = useState('');
 
   const [rows, setRows] = useState([
     createData(
       "Elon Musk",
-      "19/03/22",
+      "03/19/22",
       "Website",
       "E-Commerce",
       "N/A",
       "N/A",
       "N/A",
-      "$1500"
+      "$1500",
+      true
     ),
     createData(
       "Bill Gates",
@@ -152,45 +160,62 @@ export default function Index() {
       "Medium",
       "Web Application",
       "0-10",
-      "$1600"
+      "$1600",
+      true
     ),
     createData(
       "Steve Jobs",
-      "13/01/19",
+      "01/13/19",
       "Custom Software",
       "Photo/Video, File Transfer, Users/Authentication",
       "Low",
       "Web Application",
       "10-100",
-      "$1250"
+      "$1250",
+      true
     ),
   ]);
 
-  const handleSubmitNewProject = ()=>{
-    setRows([...rows,createData(
-      name,
-      format(date, 'MM/dd/yy'),
-      service,
-      service === 'Website' ? features : features.join(', '),
-      service === 'Website' ? 'N/A' : complexity,
-      service === 'Website' ? 'N/A' : platforms.join(', '),
-      service === 'Website' ? 'N/A' : users,
-      `$ ${total}`
-    )]);
+  const handleSubmitNewProject = () => {
+    setRows([
+      ...rows,
+      createData(
+        name,
+        format(date, "MM/dd/yy"),
+        service,
+        service === "Website" ? features : features.join(", "),
+        service === "Website" ? "N/A" : complexity,
+        service === "Website" ? "N/A" : platforms.join(", "),
+        service === "Website" ? "N/A" : users,
+        `$ ${total}`,
+        true
+      ),
+    ]);
 
     setDialogOpen(false);
     console.log(rows);
 
-    setName('');
+    setName("");
     setDate(null);
     setService(null);
     setFeatures([]);
     setPlatforms([]);
     setComplexity(null);
     setUsers(null);
-    setTotal('');
-  }
+    setTotal("");
+  };
 
+  const handleSearch = (event) => {
+    setSearch(event.target.value)
+
+    const rowData = rows.map( row => Object.values(row).filter(option => option !== true && option !== false))
+    const matches = rowData.map(row => row.map(option => option.toLowerCase().includes(event.target.value.toLowerCase())))
+
+    const newRows = [...rows];
+    matches.map((row,index)=> row.includes(true) ? newRows[index].search = true : newRows[index].search = false)
+
+    setRows(newRows)
+  }
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -206,13 +231,19 @@ export default function Index() {
           <TextField
             InputProps={{
               endAdornment: (
-                <InputAdornment position="end" onClick={()=> setDialogOpen(true)} sx={{cursor: 'pointer'}} >
+                <InputAdornment
+                  position="end"
+                  onClick={() => setDialogOpen(true)}
+                  sx={{ cursor: "pointer" }}
+                >
                   <AddIcon color="primary" style={{ fontSize: 30 }} />
                 </InputAdornment>
               ),
             }}
             sx={{ marginLeft: "2em", width: "35em" }}
             placeholder="Search project details or create a new entry."
+            value={search}
+            onChange={handleSearch}
           />
         </Grid>
         <Grid item sx={{ marginLeft: "2em", marginTop: "1.5em" }}>
@@ -227,7 +258,7 @@ export default function Index() {
               }
               label="Websites"
               labelPlacement="start"
-              sx={{marginRight: '5em'}}
+              sx={{ marginRight: "5em" }}
             />
             <FormControlLabel
               control={
@@ -239,7 +270,7 @@ export default function Index() {
               }
               label="iOS Apps"
               labelPlacement="start"
-              sx={{marginRight: '5em'}}
+              sx={{ marginRight: "5em" }}
             />
             <FormControlLabel
               control={
@@ -251,7 +282,7 @@ export default function Index() {
               }
               label="Android Apps"
               labelPlacement="start"
-              sx={{marginRight: '5em'}}
+              sx={{ marginRight: "5em" }}
             />
             <FormControlLabel
               control={
@@ -263,7 +294,7 @@ export default function Index() {
               }
               label="Custom Software"
               labelPlacement="start"
-              sx={{marginRight: '5em'}}
+              sx={{ marginRight: "5em" }}
             />
           </FormGroup>
         </Grid>
@@ -282,165 +313,325 @@ export default function Index() {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell align='center'>Name</TableCell>
-                  <TableCell align='center'>Date</TableCell>
-                  <TableCell align='center'>Services</TableCell>
-                  <TableCell align='center'>Features</TableCell>
-                  <TableCell align='center'>Complexity</TableCell>
-                  <TableCell align='center'>Platforms</TableCell>
-                  <TableCell align='center'>Users</TableCell>
-                  <TableCell align='center'>Total</TableCell>
+                  <TableCell align="center">Name</TableCell>
+                  <TableCell align="center">Date</TableCell>
+                  <TableCell align="center">Services</TableCell>
+                  <TableCell align="center">Features</TableCell>
+                  <TableCell align="center">Complexity</TableCell>
+                  <TableCell align="center">Platforms</TableCell>
+                  <TableCell align="center">Users</TableCell>
+                  <TableCell align="center">Total</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row, index) => (
+                {rows.filter(row => row.search).map((row, index) => (
                   <TableRow key={index}>
-                    <TableCell align='center'>{row.name}</TableCell>
-                    <TableCell align='center'>{row.date}</TableCell>
-                    <TableCell align='center'>{row.service}</TableCell>
-                    <TableCell sx={{maxWidth:'5em'}} align='center'>{row.features}</TableCell>
-                    <TableCell align='center'>{row.complexity}</TableCell>
-                    <TableCell align='center'>{row.platforms}</TableCell>
-                    <TableCell align='center'>{row.users}</TableCell>
-                    <TableCell align='center'>{row.total}</TableCell>
+                    <TableCell align="center">{row.name}</TableCell>
+                    <TableCell align="center">{row.date}</TableCell>
+                    <TableCell align="center">{row.service}</TableCell>
+                    <TableCell sx={{ maxWidth: "5em" }} align="center">
+                      {row.features}
+                    </TableCell>
+                    <TableCell align="center">{row.complexity}</TableCell>
+                    <TableCell align="center">{row.platforms}</TableCell>
+                    <TableCell align="center">{row.users}</TableCell>
+                    <TableCell align="center">{row.total}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
           </TableContainer>
         </Grid>
-        <Dialog open={dialogOpen} onClose={()=> setDialogOpen(false)} fullWidth maxWidth='lg' >
-          <Grid container justifyContent='center'>
+        <Dialog
+          open={dialogOpen}
+          onClose={() => setDialogOpen(false)}
+          fullWidth
+          maxWidth="lg"
+        >
+          <Grid container justifyContent="center">
             <Grid item>
-              <Typography variant='h1' gutterBottom>Add a new Project</Typography>
+              <Typography variant="h1" gutterBottom>
+                Add a new Project
+              </Typography>
             </Grid>
           </Grid>
           <DialogContent>
-            <Grid container justifyContent='space-between' alignContent='center'>
+            <Grid
+              container
+              justifyContent="space-between"
+              alignContent="center"
+            >
               <Grid item>
-                <Grid item container direction='column' sm>
+                <Grid item container direction="column" sm>
                   <Grid item>
-                    <TextField variant='standard' fullWidth label='Name' id='name' value={name} onChange={(event)=> setName(event.target.value)} />
+                    <TextField
+                      variant="standard"
+                      fullWidth
+                      label="Name"
+                      id="name"
+                      value={name}
+                      onChange={(event) => setName(event.target.value)}
+                    />
                   </Grid>
                 </Grid>
-                <Grid item container direction='column' sx={{marginTop: '5em'}}>
+                <Grid
+                  item
+                  container
+                  direction="column"
+                  sx={{ marginTop: "5em" }}
+                >
                   <Grid item>
                     <FormControl>
-                      <StyledFormLabel id='services'><h2>Services</h2></StyledFormLabel>
-                      <RadioGroup aria-labelledby="service" value={service} name='service' onChange={(event)=> {setService(event.target.value); setFeatures([])}}>
-                        <MyFormControlLabel value='Website' control={<StyledRadio />} label='Website'/>
-                        <MyFormControlLabel value='Mobile App' control={<StyledRadio />} label='Mobile App' />
-                        <MyFormControlLabel value='Custom Software' control={<StyledRadio />} label='Custom Software'/>
+                      <StyledFormLabel id="services">
+                        <h2>Services</h2>
+                      </StyledFormLabel>
+                      <RadioGroup
+                        aria-labelledby="service"
+                        value={service}
+                        name="service"
+                        onChange={(event) => {
+                          setService(event.target.value);
+                          setFeatures([]);
+                        }}
+                      >
+                        <MyFormControlLabel
+                          value="Website"
+                          control={<StyledRadio />}
+                          label="Website"
+                        />
+                        <MyFormControlLabel
+                          value="Mobile App"
+                          control={<StyledRadio />}
+                          label="Mobile App"
+                        />
+                        <MyFormControlLabel
+                          value="Custom Software"
+                          control={<StyledRadio />}
+                          label="Custom Software"
+                        />
                       </RadioGroup>
                     </FormControl>
                   </Grid>
                 </Grid>
-                <Grid item container direction='column' sx={{marginTop: '5em'}}>
-                  <FormControl variant='standard' fullWidth>
-                    <InputLabel id='platforms-label'>Platforms</InputLabel>
+                <Grid
+                  item
+                  container
+                  direction="column"
+                  sx={{ marginTop: "5em" }}
+                >
+                  <FormControl variant="standard" fullWidth>
+                    <InputLabel id="platforms-label">Platforms</InputLabel>
                     <Select
                       labelId="platforms-label"
-                      sx={{width:'12em'}}
+                      sx={{ width: "12em" }}
                       id="platforms-select"
                       value={platforms}
                       label="Platform"
                       multiple
-                      onChange={(event)=> setPlatforms(event.target.value)}
-                      disabled={service === 'Website'}
+                      onChange={(event) => setPlatforms(event.target.value)}
+                      disabled={service === "Website"}
                     >
-                      {platformsOptions.map(option => 
-                          <MenuItem value={option} key={option}>{option}</MenuItem>
-                        )}
+                      {platformsOptions.map((option) => (
+                        <MenuItem value={option} key={option}>
+                          {option}
+                        </MenuItem>
+                      ))}
                     </Select>
                   </FormControl>
                 </Grid>
               </Grid>
               <Grid item>
-                <Grid item container direction='column' sm alignItems='center'>
+                <Grid item container direction="column" sm alignItems="center">
                   <Grid item>
-                    <DatePicker label='Select Date' value={date} onChange={newDate => setDate(newDate)} renderInput={(params) => <TextField variant='standard' {...params}/>}/>
+                    <DatePicker
+                      label="Select Date"
+                      value={date}
+                      onChange={(newDate) => setDate(newDate)}
+                      renderInput={(params) => (
+                        <TextField variant="standard" {...params} />
+                      )}
+                    />
                   </Grid>
                   <Grid item>
-                  <Grid item container direction='column' sx={{marginTop: '5em'}}>
-                    <Grid item>
-                      <FormControl>
-                        <StyledFormLabel id='complexity'><h2>Complexity</h2></StyledFormLabel>
-                        <RadioGroup aria-labelledby="complexity" value={complexity} name='complexity' onChange={(event)=> setComplexity(event.target.value)}>
-                          <MyFormControlLabel value='Low' control={<StyledRadio />} label='Low' disabled={service === 'Website'}/>
-                          <MyFormControlLabel value='Medium' control={<StyledRadio />} label='Medium' disabled={service === 'Website'} />
-                          <MyFormControlLabel value='High' control={<StyledRadio />} label='High' disabled={service === 'Website'}/>
-                        </RadioGroup>
-                      </FormControl>
-                    </Grid>
-                  </Grid>
-                </Grid>
-                </Grid>
-              </Grid>
-              <Grid item>
-                <Grid item container direction='column' sm alignItems='flex-end'>
-                  <Grid item>
-                    <TextField variant='standard' fullWidth label='Total' id='total' value={total} onFocus={()=> setTotalIsFocused(true)} onBlur={()=> total === '' ? setTotalIsFocused(false) : null} onChange={(event)=> setTotal(event.target.value)} InputProps={{startAdornment: totalIsFocused ? (
-                      <InputAdornment position='start'>
-                        <AttachMoneyIcon />
-                      </InputAdornment>
-                    ) : null}} />
-                  </Grid>
-                  <Grid item>
-                    <Grid item container direction='column' sx={{marginTop: '5em'}} alignItems='flex-end'>
+                    <Grid
+                      item
+                      container
+                      direction="column"
+                      sx={{ marginTop: "5em" }}
+                    >
                       <Grid item>
                         <FormControl>
-                          <StyledFormLabel id='users'><h2>Users</h2></StyledFormLabel>
-                          <RadioGroup aria-labelledby="users" value={users} name='users' onChange={(event)=> setUsers(event.target.value)}>
-                            <MyFormControlLabel value='0-10' control={<StyledRadio />} label='0-10' disabled={service === 'Website'}/>
-                            <MyFormControlLabel value='10-100' control={<StyledRadio />} label='10-100' disabled={service === 'Website'} />
-                            <MyFormControlLabel value='100+' control={<StyledRadio />} label='100+' disabled={service === 'Website'}/>
+                          <StyledFormLabel id="complexity">
+                            <h2>Complexity</h2>
+                          </StyledFormLabel>
+                          <RadioGroup
+                            aria-labelledby="complexity"
+                            value={complexity}
+                            name="complexity"
+                            onChange={(event) =>
+                              setComplexity(event.target.value)
+                            }
+                          >
+                            <MyFormControlLabel
+                              value="Low"
+                              control={<StyledRadio />}
+                              label="Low"
+                              disabled={service === "Website"}
+                            />
+                            <MyFormControlLabel
+                              value="Medium"
+                              control={<StyledRadio />}
+                              label="Medium"
+                              disabled={service === "Website"}
+                            />
+                            <MyFormControlLabel
+                              value="High"
+                              control={<StyledRadio />}
+                              label="High"
+                              disabled={service === "Website"}
+                            />
                           </RadioGroup>
                         </FormControl>
                       </Grid>
                     </Grid>
                   </Grid>
-                  <Grid item container direction='column' sx={{marginTop: '5em'}}>
-                  <FormControl variant='standard' fullWidth>
-                    <InputLabel id='features-label'>Features</InputLabel>
-                    <Select
-                      labelId="features-label"
-                      id="features-select"
-                      sx={{width:'12em'}}
-                      value={features}
-                      label="Features"
-                      multiple={service !== 'Website'}
-                      onChange={(event)=> setFeatures(event.target.value)}
-                    >
-                      { service === 'Website'
-                        ?
-                        websiteFeaturesOptions.map(option => 
-                          <MenuItem value={option} key={option}>{option}</MenuItem>
-                        )
-                        :
-                        featuresOptions.map(option => 
-                            <MenuItem value={option} key={option}>{option}</MenuItem>
-                          )
-                      }
-                    </Select>
-                  </FormControl>
                 </Grid>
+              </Grid>
+              <Grid item>
+                <Grid
+                  item
+                  container
+                  direction="column"
+                  sm
+                  alignItems="flex-end"
+                >
+                  <Grid item>
+                    <TextField
+                      variant="standard"
+                      fullWidth
+                      label="Total"
+                      id="total"
+                      value={total}
+                      onFocus={() => setTotalIsFocused(true)}
+                      onBlur={() =>
+                        total === "" ? setTotalIsFocused(false) : null
+                      }
+                      onChange={(event) => setTotal(event.target.value)}
+                      InputProps={{
+                        startAdornment: totalIsFocused ? (
+                          <InputAdornment position="start">
+                            <AttachMoneyIcon />
+                          </InputAdornment>
+                        ) : null,
+                      }}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <Grid
+                      item
+                      container
+                      direction="column"
+                      sx={{ marginTop: "5em" }}
+                      alignItems="flex-end"
+                    >
+                      <Grid item>
+                        <FormControl>
+                          <StyledFormLabel id="users">
+                            <h2>Users</h2>
+                          </StyledFormLabel>
+                          <RadioGroup
+                            aria-labelledby="users"
+                            value={users}
+                            name="users"
+                            onChange={(event) => setUsers(event.target.value)}
+                          >
+                            <MyFormControlLabel
+                              value="0-10"
+                              control={<StyledRadio />}
+                              label="0-10"
+                              disabled={service === "Website"}
+                            />
+                            <MyFormControlLabel
+                              value="10-100"
+                              control={<StyledRadio />}
+                              label="10-100"
+                              disabled={service === "Website"}
+                            />
+                            <MyFormControlLabel
+                              value="100+"
+                              control={<StyledRadio />}
+                              label="100+"
+                              disabled={service === "Website"}
+                            />
+                          </RadioGroup>
+                        </FormControl>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                  <Grid
+                    item
+                    container
+                    direction="column"
+                    sx={{ marginTop: "5em" }}
+                  >
+                    <FormControl variant="standard" fullWidth>
+                      <InputLabel id="features-label">Features</InputLabel>
+                      <Select
+                        labelId="features-label"
+                        id="features-select"
+                        sx={{ width: "12em" }}
+                        value={features}
+                        label="Features"
+                        multiple={service !== "Website"}
+                        onChange={(event) => setFeatures(event.target.value)}
+                      >
+                        {service === "Website"
+                          ? websiteFeaturesOptions.map((option) => (
+                              <MenuItem value={option} key={option}>
+                                {option}
+                              </MenuItem>
+                            ))
+                          : featuresOptions.map((option) => (
+                              <MenuItem value={option} key={option}>
+                                {option}
+                              </MenuItem>
+                            ))}
+                      </Select>
+                    </FormControl>
+                  </Grid>
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item container justifyContent='center' sx={{marginTop: '3em'}}>
+            <Grid
+              item
+              container
+              justifyContent="center"
+              sx={{ marginTop: "3em" }}
+            >
               <Grid item>
-                <StyledButtonCancel variant='contained' onClick={()=> setDialogOpen(false)}>
+                <StyledButtonCancel
+                  variant="contained"
+                  onClick={() => setDialogOpen(false)}
+                >
                   Cancel X
                 </StyledButtonCancel>
               </Grid>
               <Grid item>
-                <StyledButton variant='contained' onClick={handleSubmitNewProject}
+                <StyledButton
+                  variant="contained"
+                  onClick={handleSubmitNewProject}
                   disabled={
-                    service === 'Website'
-                    ? 
-                    name.length === 0 || total.length === 0 || features.length === 0
-                    :
-                    name.length === 0 || total.length === 0 || features.length === 0 || users === null || complexity.length === 0 || platforms.length === 0 || service.length === 0
+                    service === "Website"
+                      ? name.length === 0 ||
+                        total.length === 0 ||
+                        features.length === 0
+                      : name.length === 0 ||
+                        total.length === 0 ||
+                        features.length === 0 ||
+                        users === null ||
+                        complexity.length === 0 ||
+                        platforms.length === 0 ||
+                        service.length === 0
                   }
                 >
                   Add Project +
