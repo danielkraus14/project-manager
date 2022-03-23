@@ -36,6 +36,7 @@ import AddIcon from "@mui/icons-material/Add";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { format } from "date-fns";
+import EnhancedTable from "../src/ui/EnhancedTable";
 
 function createData(
   name,
@@ -83,7 +84,7 @@ const StyledFormLabel = styled(FormLabel)(({ theme }) => ({
 }));
 const StyledRadio = styled(Radio)(({ theme }) => ({
   "&.Mui-checked": {
-    color: theme.palette.secondary.main,
+    color: theme.palette.common.cian,
   },
 }));
 
@@ -139,6 +140,7 @@ export default function Index() {
   const [platforms, setPlatforms] = useState([]);
   const [features, setFeatures] = useState([]);
   const [search, setSearch] = useState('');
+  const [page, setPage] = useState(0);
 
   const [rows, setRows] = useState([
     createData(
@@ -206,6 +208,7 @@ export default function Index() {
   };
 
   const handleSearch = (event) => {
+    setPage(0)
     setSearch(event.target.value)
 
     const rowData = rows.map( row => Object.values(row).filter(option => option !== true && option !== false))
@@ -222,7 +225,7 @@ export default function Index() {
       <Grid
         container
         direction="column"
-        sx={{ marginTop: "8em", marginBottom: "3em" }}
+        sx={{ marginTop: "8em", marginBottom: "25em" }}
       >
         <Grid item style={{ marginLeft: "2em" }}>
           <Typography variant="h1">Projects</Typography>
@@ -298,49 +301,14 @@ export default function Index() {
             />
           </FormGroup>
         </Grid>
-        <Grid
-          item
-          container
-          justifyContent={"flex-end"}
-          sx={{ marginTop: "3em" }}
-        >
-          <Grid item sx={{ marginRight: "2em" }}>
-            <FilterListIcon sx={{ fontSize: 50 }} color="secondary" />
-          </Grid>
-        </Grid>
-        <Grid item>
-          <TableContainer component={Paper} elevation="0">
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell align="center">Name</TableCell>
-                  <TableCell align="center">Date</TableCell>
-                  <TableCell align="center">Services</TableCell>
-                  <TableCell align="center">Features</TableCell>
-                  <TableCell align="center">Complexity</TableCell>
-                  <TableCell align="center">Platforms</TableCell>
-                  <TableCell align="center">Users</TableCell>
-                  <TableCell align="center">Total</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {rows.filter(row => row.search).map((row, index) => (
-                  <TableRow key={index}>
-                    <TableCell align="center">{row.name}</TableCell>
-                    <TableCell align="center">{row.date}</TableCell>
-                    <TableCell align="center">{row.service}</TableCell>
-                    <TableCell sx={{ maxWidth: "5em" }} align="center">
-                      {row.features}
-                    </TableCell>
-                    <TableCell align="center">{row.complexity}</TableCell>
-                    <TableCell align="center">{row.platforms}</TableCell>
-                    <TableCell align="center">{row.users}</TableCell>
-                    <TableCell align="center">{row.total}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+        {/*--TABLE COMPONENT --*/}
+        <Grid item sx={{mt: '3em'}}>
+          <EnhancedTable 
+            rows={rows}
+            setRows={setRows}
+            page={page}
+            setPage={setPage}
+          />
         </Grid>
         <Dialog
           open={dialogOpen}

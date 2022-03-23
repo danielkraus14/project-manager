@@ -75,15 +75,6 @@ const theme = createTheme({
       fontWeight: 300,
       color: pmBlue
     },
-    learnButton: {
-      borderColor: pmGray,
-      borderWidth: 2,
-      textTransform: "none",
-      color: pmGray,
-      borderRadius: 50,
-      fontFamily: "Roboto",
-      fontWeight: "bold"
-    }
   },
   components:{
     MuiFormControlLabel:{
@@ -120,35 +111,26 @@ const theme = createTheme({
             borderWidth: 1.5
           }
       }
+    },
+    MuiTableSortLabel:{
+      styleOverrides:{
+        root:{
+          "&.Mui-active": {
+            color: pmCian,
+          },
+          ":hover":{
+            color: pmCian
+          }
+        },
+        icon:{
+          fill: pmCian,
+          ":hover":{
+            fill: pmCian
+          }
+        },
+      }
     }
   },
-  overrides: {
-    MuiInputLabel: {
-      root: {
-        color: pmGray,
-        fontSize: "1rem"
-      }
-    },
-    MuiInput: {
-      root: {
-        color: pmCian,
-        fontWeight: 300
-      },
-      underline: {
-        "&:before": {
-          borderBottom: `2px solid ${pmGray}`
-        },
-        "&:hover:not($disabled):not($focused):not($error):before": {
-          borderBottom: `2px solid ${pmGray}`
-        }
-      }
-    },
-    MuiPickersToolbar:{
-      toolbar:{
-        backgroundColor: pmGray
-      }
-    }
-  }
 });
 
 export default theme;
