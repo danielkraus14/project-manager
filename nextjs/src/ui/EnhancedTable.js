@@ -19,8 +19,24 @@ import Tooltip from '@mui/material/Tooltip';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
-import { Button, Snackbar } from '@mui/material';
+import { Button, InputAdornment, Menu, MenuItem, Snackbar, TextField, Chip, Grid } from '@mui/material';
 import { styled, useTheme} from "@mui/material/styles";
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
+
+const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
+  "&.Mui-focusVisible": {
+    backgroundColor: '#fff',
+  },
+  ":hover":{
+    backgroundColor: '#fff',
+  },
+}));
+
+const StyledSpan = styled('span')(({theme})=> ({
+  color: theme.palette.common.cian,
+  fontWeight: 400,
+  fontSize: '2rem'
+}))
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -87,6 +103,7 @@ const headCells = [
   }
 ];
 
+{/*-- TABLEHEAD --*/}
 function EnhancedTableHead(props) {
   const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } =
     props;
@@ -143,11 +160,25 @@ EnhancedTableHead.propTypes = {
   rowCount: PropTypes.number.isRequired,
 };
 
+{/*-- TOOLBAR --*/}
 const EnhancedTableToolbar = (props) => {
   const theme = useTheme();
   const { numSelected, selected, setSelected } = props;
   const [alert, setAlert] = React.useState({open: false, message: "The project has been deleted correctly", backgroundColor: theme.palette.secondary.light})
   const [undo, setUndo] = React.useState([])
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [openMenu, setOpenMenu] = React.useState(false);
+
+  const handleClickTotalFilter = (e)=>{
+    setAnchorEl(e.currentTarget);
+    setOpenMenu(true)
+  };
+
+  const onCloseTotalFilter =()=>{
+    setAnchorEl(null)
+    setOpenMenu(false)
+  };
+
 
   const onDelete = ()=>{
 
@@ -172,7 +203,42 @@ const EnhancedTableToolbar = (props) => {
     props.setRows(newRows)
     setUndo([]);
     setAlert({...alert, open: false})
-  }
+  };
+
+  const handleTotalFilter = (event)=>{
+    props.setFilterPrice(event.target.value)
+
+    if(event.target.value !== ''){
+      const newRows = [...props.rows];
+      newRows.map(row => eval( `${event.target.value} ${props.totalFilter === '=' ? '===' : props.totalFilter} ${row.total.slice(1, row.total.length)}`)
+      ?
+      (row.search = true)
+      :
+      (row.search = false)
+      )
+      props.setRows(newRows)
+    } else{
+      const newRows = [...props.rows];
+      newRows.map(row => row.search=true)
+
+      props.setRows(newRows)
+    }
+
+  };
+
+  const handleFilterChange = (operator)=>{
+
+    if(props.filterPrice !== ''){
+      const newRows = [...props.rows];
+      newRows.map(row => eval( `${props.filterPrice} ${operator === '=' ? '===' : operator} ${row.total.slice(1, row.total.length)}`)
+      ?
+      (row.search = true)
+      :
+      (row.search = false)
+      )
+      props.setRows(newRows)
+    };
+  };
 
   return (
          <Toolbar
@@ -211,7 +277,7 @@ const EnhancedTableToolbar = (props) => {
             </Tooltip>
           ) : (
             <Tooltip title="Filter list" placement='right-end'>
-              <IconButton>
+              <IconButton onClick={handleClickTotalFilter}>
                 <FilterListIcon color='secondary' fontSize='large' />
               </IconButton>
             </Tooltip>
@@ -235,6 +301,43 @@ const EnhancedTableToolbar = (props) => {
               }
           }}
           />
+          <Menu
+            id='simple-menu'
+            anchorEl={anchorEl}
+            open={openMenu}
+            onClose={onCloseTotalFilter}
+            elevation={0}
+            sx={{zIndex: 1302}}
+            keepMounted
+            value={props.filterPrice}
+            onChange={handleTotalFilter}
+          >
+            <StyledMenuItem>
+              <TextField variant='standard' placeholder='Enter a price to filter  ' InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <AttachMoneyIcon />
+                  </InputAdornment>),
+                endAdornment: (
+                  <InputAdornment 
+                    onClick={
+                      ()=> {props.setTotalFilter(props.totalFilter === '>' ? '<' : props.totalFilter === '<' ? '=' : '>');
+                      
+                      handleFilterChange(props.totalFilter === '>' ? '<' : props.totalFilter === '<' ? '=' : '>')
+                      }
+                    }
+
+                    position='end'
+                    sx={{cursor: 'pointer'}}
+                  >
+                    <StyledSpan>
+                      {props.totalFilter}
+                    </StyledSpan>
+                  </InputAdornment>
+                )
+              }} />
+            </StyledMenuItem>
+          </Menu>
         </Toolbar>
   );
 };
@@ -242,12 +345,14 @@ const EnhancedTableToolbar = (props) => {
 EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
-
+{/*-- TABLE --*/}
 export default function EnhancedTable(props) {
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('name');
   const [selected, setSelected] = React.useState([]);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [filterPrice, setFilterPrice] = React.useState('')
+  const [totalFilter, setTotalFilter] = React.useState('>');
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -301,6 +406,27 @@ export default function EnhancedTable(props) {
   const emptyRows =
     props.page > 0 ? Math.max(0, (1 + props.page) * rowsPerPage - props.rows.length) : 0;
 
+    const switchFilters = ()=>{
+      const {websiteChecked, androidChecked, iOSChecked, customSoftwareChecked } = props;
+
+      const websiteFiltered = props.rows.filter(row => websiteChecked ? row.service === 'Website' : null);
+      const androidFiltered = props.rows.filter(row => androidChecked ? row.platforms.includes('Android') : null);
+      const iOSFiltered = props.rows.filter(row => iOSChecked ? row.platforms.includes('iOS') : null);
+      const customSoftwareFiltered = props.rows.filter(row => customSoftwareChecked ? row.service === 'Custom Software' : null);
+
+      if(!websiteChecked && !androidChecked && !iOSChecked && !customSoftwareChecked){
+        return props.rows
+      } else{
+        let newRows = websiteFiltered.concat(androidFiltered.filter(item => websiteFiltered.indexOf(item) < 0));
+
+        let newRows2 = newRows.concat(iOSFiltered.filter(item => newRows.indexOf(item) < 0));
+
+        let newRows3 = newRows2.concat(customSoftwareFiltered.filter(item => newRows2.indexOf(item) < 0));
+
+        return newRows3;
+      }
+    };
+
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }} elevation={0} >
@@ -310,6 +436,10 @@ export default function EnhancedTable(props) {
           setRows={props.setRows}
           selected={selected}
           setSelected={setSelected}
+          filterPrice={filterPrice}
+          setFilterPrice={setFilterPrice}
+          totalFilter={totalFilter}
+          setTotalFilter={setTotalFilter}
         />
         <TableContainer>
           <Table
@@ -328,7 +458,7 @@ export default function EnhancedTable(props) {
             <TableBody>
               {/* if you don't need to support IE11, you can replace the `stableSort` call with:
                  rows.slice().sort(getComparator(order, orderBy)) */}
-              {stableSort(props.rows.filter(row => row.search), getComparator(order, orderBy))
+              {stableSort(switchFilters().filter(row => row.search), getComparator(order, orderBy))
                 .slice(props.page * rowsPerPage, props.page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   const isItemSelected = isSelected(row.name);
@@ -386,12 +516,22 @@ export default function EnhancedTable(props) {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={props.rows.filter(row=> row.search).length}
+          count={switchFilters().filter(row=> row.search).length}
           rowsPerPage={rowsPerPage}
           page={props.page}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
+        <Grid container justifyContent='flex-end' sx={{marginTop: '1.5em'}}>
+          <Grid item>
+            {filterPrice !== '' ? (<Chip variant="outlined" color="secondary" label={totalFilter === '>' ? `Less than $${filterPrice}` : totalFilter === '<' ? `Greater than $${filterPrice}` : `Equal to $${filterPrice}` } onDelete={()=> {
+              setFilterPrice('');
+              const newRows = [...props.rows]
+              newRows.map(row => row.search=true)
+              props.setRows(newRows)  
+            }} icon={<AttachMoneyIcon />} />) : null}
+          </Grid>
+        </Grid>
       </Paper>
     </Box>
   );

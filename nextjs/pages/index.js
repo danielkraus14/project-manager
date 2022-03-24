@@ -9,13 +9,6 @@ import {
   FormGroup,
   FormControlLabel,
   useMediaQuery,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableRow,
-  TableHead,
-  Paper,
   Dialog,
   DialogContent,
   RadioGroup,
@@ -112,7 +105,9 @@ const StyledButtonCancel = styled(Button)(({ theme }) => ({
 export default function Index() {
   const theme = useTheme();
   const classes = useStyles();
-  const matchesMD = useMediaQuery(theme.breakpoints.down("sm"));
+  const matchesMD = useMediaQuery(theme.breakpoints.down("md"));
+  const matchesSM = useMediaQuery(theme.breakpoints.down("sm"));
+  const matchesLG = useMediaQuery(theme.breakpoints.down("lg"));
 
   const platformsOptions = ["Web", "iOS", "Android"];
   const featuresOptions = [
@@ -125,10 +120,10 @@ export default function Index() {
   ];
   const websiteFeaturesOptions = ["Basic", "Interactive", "E-Commerce"];
 
-  const [websiteChek, setWebsiteChek] = useState(false);
-  const [iOSChek, setiOSChek] = useState(false);
-  const [androidChek, setandroidChek] = useState(false);
-  const [softwareChek, setSoftwareChek] = useState(false);
+  const [websiteChecked, setWebsiteChecked] = useState(false);
+  const [iOSChecked, setiOSChecked] = useState(false);
+  const [androidChecked, setAndroidChecked] = useState(false);
+  const [customSoftwareChecked, setCustomSoftwareChecked] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [name, setName] = useState("");
   const [date, setDate] = useState(null);
@@ -156,24 +151,35 @@ export default function Index() {
     ),
     createData(
       "Bill Gates",
-      "11/02/21",
-      "Custom Software",
+      "11/02/22",
+      "Mobile App",
       "GPS, Push Notifications, Users/Authentication, File Transfer",
       "Medium",
-      "Web Application",
+      "Android",
       "0-10",
       "$1600",
       true
     ),
     createData(
       "Steve Jobs",
-      "01/13/19",
+      "01/13/22",
       "Custom Software",
       "Photo/Video, File Transfer, Users/Authentication",
       "Low",
       "Web Application",
       "10-100",
       "$1250",
+      true
+    ),
+    createData(
+      "Daniel",
+      "03/25/22",
+      "Mobile App",
+      "Photo/Video, File Transfer, Users/Authentication",
+      "Low",
+      "iOS",
+      "10-100",
+      "$1870",
       true
     ),
   ]);
@@ -225,7 +231,7 @@ export default function Index() {
       <Grid
         container
         direction="column"
-        sx={{ marginTop: "8em", marginBottom: "25em" }}
+        sx={{ marginTop: "8em", marginBottom: "25em", maxWidth:'100%' }}
       >
         <Grid item style={{ marginLeft: "2em" }}>
           <Typography variant="h1">Projects</Typography>
@@ -251,54 +257,64 @@ export default function Index() {
         </Grid>
         <Grid item sx={{ marginLeft: "2em", marginTop: "1.5em" }}>
           <FormGroup row>
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={websiteChek}
-                  color="primary"
-                  onChange={() => setWebsiteChek(!websiteChek)}
+            <Grid container direction={matchesMD ? 'column' : undefined}>
+              <Grid item sx={{marginTop: matchesMD ? '1.5em' : matchesSM ? '1em' : undefined}}>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={websiteChecked}
+                      color="primary"
+                      onChange={() => setWebsiteChecked(!websiteChecked)}
+                    />
+                  }
+                  label="Websites"
+                  labelPlacement={matchesMD ? "end" : "start"}
+                  sx={{ marginRight: matchesLG ? '2em' : '4em' }}
                 />
-              }
-              label="Websites"
-              labelPlacement="start"
-              sx={{ marginRight: "5em" }}
-            />
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={iOSChek}
-                  color="primary"
-                  onChange={() => setiOSChek(!iOSChek)}
+              </Grid>
+              <Grid item sx={{marginTop: matchesMD ? '1.5em' : matchesSM ? '1em' : undefined}}>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={iOSChecked}
+                      color="primary"
+                      onChange={() => setiOSChecked(!iOSChecked)}
+                    />
+                  }
+                  label="iOS Apps"
+                  labelPlacement={matchesMD ? "end" : "start"}
+                  sx={{ marginRight: matchesLG ? '2em' : '4em' }}
                 />
-              }
-              label="iOS Apps"
-              labelPlacement="start"
-              sx={{ marginRight: "5em" }}
-            />
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={androidChek}
-                  color="primary"
-                  onChange={() => setandroidChek(!androidChek)}
+              </Grid>
+              <Grid item sx={{marginTop: matchesMD ? '1.5em' : matchesSM ? '1em' : undefined}}>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={androidChecked}
+                      color="primary"
+                      onChange={() => setAndroidChecked(!androidChecked)}
+                    />
+                  }
+                  label="Android Apps"
+                  labelPlacement={matchesMD ? "end" : "start"}
+                  sx={{ marginRight: matchesLG ? '2em' : '4em' }}
                 />
-              }
-              label="Android Apps"
-              labelPlacement="start"
-              sx={{ marginRight: "5em" }}
-            />
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={softwareChek}
-                  color="primary"
-                  onChange={() => setSoftwareChek(!softwareChek)}
+              </Grid>
+              <Grid item sx={{marginTop: matchesMD ? '1.5em' : matchesSM ? '1em' : undefined}}>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={customSoftwareChecked}
+                      color="primary"
+                      onChange={() => setCustomSoftwareChecked(!customSoftwareChecked)}
+                    />
+                  }
+                  label="Custom Software"
+                  labelPlacement={matchesMD ? "end" : "start"}
+                  sx={{ marginRight: matchesLG ? '1.8em' : '4em' }}
                 />
-              }
-              label="Custom Software"
-              labelPlacement="start"
-              sx={{ marginRight: "5em" }}
-            />
+              </Grid>
+            </Grid>
           </FormGroup>
         </Grid>
         {/*--TABLE COMPONENT --*/}
@@ -308,6 +324,10 @@ export default function Index() {
             setRows={setRows}
             page={page}
             setPage={setPage}
+            websiteChecked={websiteChecked}
+            iOSChecked={iOSChecked}
+            androidChecked={androidChecked}
+            customSoftwareChecked={customSoftwareChecked}
           />
         </Grid>
         <Dialog

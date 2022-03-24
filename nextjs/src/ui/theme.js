@@ -96,6 +96,24 @@ const theme = createTheme({
         }
       }
     },
+    MuiInput: {
+      styleOverrides: {
+          root: {
+              '&.Mui-disabled': {
+                  '::before': {
+                      borderBottom: '2px solid #fff '
+                  }
+              }
+          }
+      },
+    },
+    MuiInputAdornment:{
+      styleOverrides:{
+        root:{
+          color: pmCian
+        }
+      }
+    },
     MuiTableCell:{
       styleOverrides:{
         head:{
