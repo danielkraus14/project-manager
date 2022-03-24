@@ -231,9 +231,10 @@ export default function Index() {
       <Grid
         container
         direction="column"
-        sx={{ marginTop: "8em", marginBottom: "25em", maxWidth:'100%' }}
+        sx={{ marginTop: "8em", marginBottom: "25em" }}
+        alignItems={ matchesSM ? 'flex-start' : matchesMD ? 'center' : undefined}
       >
-        <Grid item style={{ marginLeft: "2em" }}>
+        <Grid item style={{ marginLeft: matchesSM ? '1em' : matchesMD ? 0 : "2em" }}>
           <Typography variant="h1">Projects</Typography>
         </Grid>
         <Grid item>
@@ -249,7 +250,7 @@ export default function Index() {
                 </InputAdornment>
               ),
             }}
-            sx={{ marginLeft: "2em", width: "35em" }}
+            sx={{ marginLeft: matchesSM ? '1em' : matchesMD ? 0 : "2em", width: matchesSM ? '20em' : matchesMD ? '25em' : "35em" }}
             placeholder="Search project details or create a new entry."
             value={search}
             onChange={handleSearch}
@@ -257,7 +258,7 @@ export default function Index() {
         </Grid>
         <Grid item sx={{ marginLeft: "2em", marginTop: "1.5em" }}>
           <FormGroup row>
-            <Grid container direction={matchesMD ? 'column' : undefined}>
+            <Grid container direction={matchesMD ? 'column' : undefined} alignContent={matchesSM ? 'flex-start' : matchesMD ? 'center' : undefined}>
               <Grid item sx={{marginTop: matchesMD ? '1.5em' : matchesSM ? '1em' : undefined}}>
                 <FormControlLabel
                   control={
@@ -269,7 +270,7 @@ export default function Index() {
                   }
                   label="Websites"
                   labelPlacement={matchesMD ? "end" : "start"}
-                  sx={{ marginRight: matchesLG ? '2em' : '4em' }}
+                  sx={{ marginRight: matchesLG ? '2em' : matchesMD ? 0 : '4em' }}
                 />
               </Grid>
               <Grid item sx={{marginTop: matchesMD ? '1.5em' : matchesSM ? '1em' : undefined}}>
@@ -283,8 +284,8 @@ export default function Index() {
                   }
                   label="iOS Apps"
                   labelPlacement={matchesMD ? "end" : "start"}
-                  sx={{ marginRight: matchesLG ? '2em' : '4em' }}
-                />
+                  sx={{ marginRight: matchesMD ? 0 : matchesLG ? '2em' : '4em' }}
+                  />
               </Grid>
               <Grid item sx={{marginTop: matchesMD ? '1.5em' : matchesSM ? '1em' : undefined}}>
                 <FormControlLabel
@@ -297,8 +298,8 @@ export default function Index() {
                   }
                   label="Android Apps"
                   labelPlacement={matchesMD ? "end" : "start"}
-                  sx={{ marginRight: matchesLG ? '2em' : '4em' }}
-                />
+                  sx={{ marginRight: matchesLG ? '2em' : matchesMD ? 0 : '4em' }}
+                  />
               </Grid>
               <Grid item sx={{marginTop: matchesMD ? '1.5em' : matchesSM ? '1em' : undefined}}>
                 <FormControlLabel
@@ -311,14 +312,14 @@ export default function Index() {
                   }
                   label="Custom Software"
                   labelPlacement={matchesMD ? "end" : "start"}
-                  sx={{ marginRight: matchesLG ? '1.8em' : '4em' }}
-                />
+                  sx={{ marginRight: matchesLG ? '2em' : matchesMD ? 0 : '4em' }}
+                  />
               </Grid>
             </Grid>
           </FormGroup>
         </Grid>
         {/*--TABLE COMPONENT --*/}
-        <Grid item sx={{mt: '3em'}}>
+        <Grid item sx={{mt: '3em', maxWidth:'100%'}}>
           <EnhancedTable 
             rows={rows}
             setRows={setRows}
@@ -330,13 +331,15 @@ export default function Index() {
             customSoftwareChecked={customSoftwareChecked}
           />
         </Grid>
+        {/*--DIALOG COMPONENT --*/}
         <Dialog
           open={dialogOpen}
           onClose={() => setDialogOpen(false)}
           fullWidth
           maxWidth="lg"
+          fullScreen={matchesMD}
         >
-          <Grid container justifyContent="center">
+          <Grid container justifyContent="center" >
             <Grid item>
               <Typography variant="h1" gutterBottom>
                 Add a new Project
@@ -348,9 +351,10 @@ export default function Index() {
               container
               justifyContent="space-between"
               alignContent="center"
+              direction={matchesMD ? 'column' : 'row'}
             >
               <Grid item>
-                <Grid item container direction="column" sm>
+                <Grid item container direction="column" sm alignItems={ matchesMD ? "center" : undefined}>
                   <Grid item>
                     <TextField
                       variant="standard"
@@ -359,6 +363,7 @@ export default function Index() {
                       id="name"
                       value={name}
                       onChange={(event) => setName(event.target.value)}
+                      sx={{width: matchesMD ? 250 : undefined}}
                     />
                   </Grid>
                 </Grid>
@@ -366,9 +371,10 @@ export default function Index() {
                   item
                   container
                   direction="column"
-                  sx={{ marginTop: "5em" }}
+                  sx={{ marginTop: matchesMD ? '2em' : "5em" }}
+                  alignItems={ matchesMD ? "center" : undefined}
                 >
-                  <Grid item>
+                  <Grid item align={matchesMD ? 'center' : undefined}>
                     <FormControl>
                       <StyledFormLabel id="services">
                         <h2>Services</h2>
@@ -405,13 +411,13 @@ export default function Index() {
                   item
                   container
                   direction="column"
-                  sx={{ marginTop: "5em" }}
+                  sx={{ marginTop: matchesMD ? '2em' : "5em" }}
                 >
                   <FormControl variant="standard" fullWidth>
                     <InputLabel id="platforms-label">Platforms</InputLabel>
                     <Select
                       labelId="platforms-label"
-                      sx={{ width: "12em" }}
+                      sx={{ width: matchesMD ? 250 : "12em" }}
                       id="platforms-select"
                       value={platforms}
                       label="Platform"
@@ -429,12 +435,13 @@ export default function Index() {
                 </Grid>
               </Grid>
               <Grid item>
-                <Grid item container direction="column" sm alignItems="center">
+                <Grid item container direction="column" sm alignItems="center" sx={{marginTop: matchesMD ? '2em' : 0}}>
                   <Grid item>
                     <DatePicker
                       label="Select Date"
                       value={date}
                       onChange={(newDate) => setDate(newDate)}
+                      sx={{width: matchesMD ? 250 : undefined}}
                       renderInput={(params) => (
                         <TextField variant="standard" {...params} />
                       )}
@@ -445,7 +452,7 @@ export default function Index() {
                       item
                       container
                       direction="column"
-                      sx={{ marginTop: "5em" }}
+                      sx={{ marginTop: matchesMD ? '2em' : "5em" }}
                     >
                       <Grid item>
                         <FormControl>
@@ -491,11 +498,12 @@ export default function Index() {
                   container
                   direction="column"
                   sm
-                  alignItems="flex-end"
+                  alignItems={ matchesMD ? 'center' : "flex-end"}
                 >
-                  <Grid item>
+                  <Grid item sx={{marginTop: matchesMD ? '2em' : 0}}>
                     <TextField
                       variant="standard"
+                      sx={{width: matchesMD ? 250 : undefined}}
                       fullWidth
                       label="Total"
                       id="total"
@@ -519,8 +527,8 @@ export default function Index() {
                       item
                       container
                       direction="column"
-                      sx={{ marginTop: "5em" }}
-                      alignItems="flex-end"
+                      sx={{ marginTop: matchesMD ? '2em' : "5em" }}
+                      alignItems={matchesMD ? 'center' : "flex-end"}
                     >
                       <Grid item>
                         <FormControl>
@@ -560,14 +568,14 @@ export default function Index() {
                     item
                     container
                     direction="column"
-                    sx={{ marginTop: "5em" }}
+                    sx={{ marginTop: matchesMD ? '2em' : "5em" }}
                   >
                     <FormControl variant="standard" fullWidth>
                       <InputLabel id="features-label">Features</InputLabel>
                       <Select
                         labelId="features-label"
                         id="features-select"
-                        sx={{ width: "12em" }}
+                        sx={{ width: matchesMD ? 250 : "12em" }}
                         value={features}
                         label="Features"
                         multiple={service !== "Website"}
@@ -594,7 +602,7 @@ export default function Index() {
               item
               container
               justifyContent="center"
-              sx={{ marginTop: "3em" }}
+              sx={{ marginTop: matchesMD ? '4em' : "3em" }}
             >
               <Grid item>
                 <StyledButtonCancel

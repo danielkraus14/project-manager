@@ -243,6 +243,7 @@ const EnhancedTableToolbar = (props) => {
   return (
          <Toolbar
           sx={{
+
             pl: { sm: 2 },
             pr: { xs: 1, sm: 1 },
             ...(numSelected > 0 && {
@@ -443,7 +444,7 @@ export default function EnhancedTable(props) {
         />
         <TableContainer>
           <Table
-            sx={{ minWidth: 750 }}
+            sx={{ minWidth: 600 }}
             aria-labelledby="tableTitle"
             size='medium'
           >
@@ -493,7 +494,7 @@ export default function EnhancedTable(props) {
                       </TableCell>
                       <TableCell align="center">{row.date}</TableCell>
                       <TableCell align="center">{row.service}</TableCell>
-                      <TableCell align="center" sx={{maxWidth: '5em'}}>{row.features}</TableCell>
+                      <TableCell align="center" sx={{ width: '5em'}}>{row.features}</TableCell>
                       <TableCell align="center">{row.complexity}</TableCell>
                       <TableCell align="center">{row.platforms}</TableCell>
                       <TableCell align="center">{row.users}</TableCell>
